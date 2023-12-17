@@ -1,0 +1,14 @@
+.btn {
+  text-align: center;
+  border-radius: 10px;
+  background: var(--primary-color);
+  color: var(--light-color);
+  display: block;
+  width: 100%;
+  border: none;
+  padding: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  text-transform: capitalize;
+  cursor: pointer;
+}
