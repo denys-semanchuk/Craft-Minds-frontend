@@ -1,7 +1,7 @@
 import React from 'react'
 import {Logo} from "./logo";
 import {Container} from "@/shared/ui/container";
-import {Profile} from "./profile";
+import {ProfileThumbnail} from "./profile";
 import styles from './styles.module.scss'
 import {ChatButton} from "./chat-button";
 import {inject, observer} from "mobx-react";
@@ -20,7 +20,7 @@ export const Header = inject('userStore')(observer((props: { userStore?: UserSto
                         <Link href={paths.register} style={{paddingRight: 15}}>register</Link>
                         <Link href={paths.login}>login</Link>
                     </div>}
-                    {userStore.isAuth && <Profile/>}
+                    {userStore.isAuth && <ProfileThumbnail name={userStore.name}/>}
                     {userStore.isAuth && <ChatButton/>}
                 </div>
             </Container>

@@ -12,6 +12,7 @@ import {emailValidator, fNameValidator, lNameValidator, passwordValidator} from 
 import styles from './styles.module.scss'
 import {inject} from "mobx-react";
 import {UserStore} from "@/entities/user";
+import {useRouter} from "next/navigation";
 
 interface RegisterFormProps {
     userStore: UserStore
@@ -19,8 +20,10 @@ interface RegisterFormProps {
 
 export const RegisterForm = inject('userStore')(({userStore}: RegisterFormProps) => {
     const methods = useForm()
+    const router = useRouter()
     const handleSubmit = methods.handleSubmit(async (data) => {
         await userStore.registerUser(data)
+        router.replace('/')
     })
     return (
         <FormProvider {...methods}>
