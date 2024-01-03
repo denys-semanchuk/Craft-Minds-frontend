@@ -1,7 +1,7 @@
 import type {AppProps} from 'next/app'
 import {Header} from "@/widgets/header";
 import './styles/index.scss'
-import {withProviders} from "@/app/withProviders";
+import {withProviders} from "./providers";
 
 const App = ({Component, pageProps}: AppProps) => {
 

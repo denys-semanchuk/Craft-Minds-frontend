@@ -1,5 +1,2 @@
-const Chat = () => {
-    return <>Chat</>
-}
+export {ChatPage as default} from "@/pages/chat";
 
-export default Chat

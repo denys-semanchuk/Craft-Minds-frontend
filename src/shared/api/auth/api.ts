@@ -1,4 +1,4 @@
-import {http} from "./config";
+import {http} from "../config";
 
 type Response = { access_token: string }
 export const authenticateUser = async (body: {}, type = "register"): Promise<Response> => {

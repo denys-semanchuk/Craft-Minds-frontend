@@ -13,6 +13,8 @@ import styles from './styles.module.scss'
 import {inject} from "mobx-react";
 import {UserStore} from "@/entities/user";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
+import {paths} from "@/shared/routing";
 
 interface RegisterFormProps {
     userStore: UserStore
@@ -35,6 +37,7 @@ export const RegisterForm = inject('userStore')(({userStore}: RegisterFormProps)
                 <SubmitBtn onClick={handleSubmit}>
                     Register
                 </SubmitBtn>
+                <p>Already have an account? <Link href={paths.login}>Sign in</Link></p>
             </form>
         </FormProvider>
     )

@@ -1,1 +1,0 @@
-export {ProfileThumbnail} from './ui'
