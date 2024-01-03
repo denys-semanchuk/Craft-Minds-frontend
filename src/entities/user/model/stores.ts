@@ -8,7 +8,8 @@ export class UserStore {
     user: User | null = null
     isAuth = false
     isLoading = false
-    isError = {}
+    isError = {show: false, message: ""};
+    isAuthFinished = false
 
     constructor() {
         makeAutoObservable(this, {
@@ -16,8 +17,10 @@ export class UserStore {
             isAuth: observable,
             isError: observable,
             isLoading: observable,
+            isAuthFinished: observable,
             registerUser: action,
-            name: computed
+            setIsAuthFinished: action,
+            name: computed,
         })
     }
 
@@ -25,44 +28,51 @@ export class UserStore {
         return `${this.user?.firstName} ${this.user?.lastName}`
     }
 
+    setIsAuthFinished() {
+        this.isAuthFinished = true
+    }
+
     async registerUser(body: {}) {
         try {
-            const {access_token} = await authenticateUser(body)
-            sessionStorage.setItem('access_token', access_token)
-            runInAction(() => {
-                this.user = jwtDecode(access_token);
-                this.isAuth = true
-                this.isError = {}
-            })
+            const {access_token} = await authenticateUser(body);
+            this.handleAuthenticationSuccess(access_token);
         } catch (e) {
-            if (e instanceof AxiosError) {
-                this.isError = {
-                    show: true,
-                    message: e.message
-                }
-            }
+            this.handleAuthenticationError(e);
         }
     }
+
 
     async loginUser(body: {}) {
         try {
-
-            const {access_token} = await authenticateUser(body, 'login')
-            sessionStorage.setItem('access_token', access_token)
-            runInAction(() => {
-                this.user = jwtDecode(access_token);
-                this.isAuth = true
-                this.isError = {}
-            })
+            const {access_token} = await authenticateUser(body, 'login');
+            this.handleAuthenticationSuccess(access_token);
         } catch (e) {
-            if (e instanceof AxiosError) {
-                this.isError = {
-                    show: true,
-                    message: e.message
-                }
-            }
+            this.handleAuthenticationError(e);
         }
     }
+
+    private handleAuthenticationSuccess(access_token: string) {
+        sessionStorage.setItem('access_token', access_token);
+        const user = jwtDecode(access_token) as User;
+        runInAction(() => {
+            this.user = user;
+            this.isAuth = true;
+            this.isError = {show: false, message: ""};
+        });
+    }
+
+
+    private handleAuthenticationError(error: any) {
+        if (error instanceof AxiosError) {
+            runInAction(() => {
+                this.isError = {
+                    show: true,
+                    message: error.message || "An error occurred",
+                };
+            });
+        }
+    }
+
 
     async authUserByToken() {
         this.isLoading = true
@@ -75,10 +85,14 @@ export class UserStore {
             runInAction(() => {
                 this.user = user;
                 this.isAuth = true;
-                this.isLoading = false
             })
         } catch (e) {
             this.isLoading = false
+        } finally {
+            runInAction(() => {
+                this.isAuthFinished = true
+                this.isLoading = false
+            })
         }
     }
 

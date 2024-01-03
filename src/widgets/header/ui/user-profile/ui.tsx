@@ -4,12 +4,14 @@ import {paths} from "@/shared/routing";
 import styles from './styles.module.scss'
 import {FaChevronDown} from "react-icons/fa";
 import Image from "next/image";
+import {DefaultUserImg} from "@/shared/ui/default-user-img";
 
-export const UserProfile = ({name, image}: { name: string, image?:string }) => {
+export const UserProfile = ({name, image}: { name: string, image?: string }) => {
     return (
         <div className={styles.wrapper}>
             <FaChevronDown/>
-            <Image style={{borderRadius: 20}} src={image || '/default-user.png'} alt='' width={30} height={30}/>
+            {image ? <Image style={{borderRadius: 20}} src={image} alt='' width={30} height={30}/> :
+                <DefaultUserImg width={30} height={30}/>}
             {name}
         </div>
     )

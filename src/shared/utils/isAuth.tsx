@@ -1,21 +1,20 @@
 import {inject} from "mobx-react";
-import {UserStore} from "@/entities/user";
 import {useEffect} from "react";
 import {useRouter} from 'next/navigation'
+import {ReactComponentLike} from "prop-types";
 
-export const isAuth = (Component: any) => {
+export const isAuth = (Component: ReactComponentLike) => {
     return inject("userStore")(function IsAuth(props: any) {
-        const userStore = props.userStore! as UserStore
-        const isAuthenticated = userStore.isAuth
+        const userStore = props.userStore!
         const router = useRouter()
 
         useEffect(() => {
-            if (!isAuthenticated) {
+            if (!userStore.isAuth && userStore.isAuthFinished) {
                 router.push('/')
             }
         }, []);
 
-        if (!isAuthenticated) return null
+        if (!userStore.isAuth) return null
         return <Component {...props}/>
     })
 }
